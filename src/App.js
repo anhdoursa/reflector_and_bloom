@@ -45,9 +45,7 @@ const Object = ({ children, color, name, position, text, ...props }) => {
   };
 
   useFrame(() => {
-    // mesh.current.rotation.x += 0.01;
     mesh.current.rotation.y += 0.01;
-    // mesh.current.rotation.z += 0.01;
   });
   return (
     <group>
@@ -63,7 +61,6 @@ const Object = ({ children, color, name, position, text, ...props }) => {
         <meshStandardMaterial color={color} toneMapped={bloom} side={DoubleSide} />
       </mesh>
       <Html position={[position[0], position[1] + 1.2, position[2]]} name={'html-' + name}>
-        {/* {text && <p style={{ color: pickColor, width: '300px', textAlign: 'left', maxWidth: '100%' }}>{text}</p>} */}
         <div className="point">
           <div className="inner" onClick={toggleBloom}>
             <div className="inner-inner">
@@ -83,6 +80,7 @@ const Object = ({ children, color, name, position, text, ...props }) => {
     </group>
   );
 };
+
 const Triangle = (props) => {
   const { paths: [path] } = useLoader(SVGLoader, 'textures/triangle.svg') // prettier-ignore
   const geom = useMemo(() => SVGLoader.pointsToStroke(path.subPaths[0].getPoints(), path.userData.style), []);
@@ -91,11 +89,11 @@ const Triangle = (props) => {
 };
 
 function App() {
-  const texture = useLoader(
+  const envTexture = useLoader(
     RGBELoader,
     'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/peppermint_powerplant_2_1k.hdr'
   );
-  texture.mapping = EquirectangularReflectionMapping;
+  envTexture.mapping = EquirectangularReflectionMapping;
 
   return (
     <div style={{ width: '100%', height: '100vh' }}>
@@ -120,7 +118,7 @@ function App() {
             <Bloom luminanceThreshold={1} luminanceSmoothing={0.4} intensity={0.6} />
           </EffectComposer>
 
-          <Environment map={texture} />
+          <Environment map={envTexture} />
           <OrbitControls maxPolarAngle={Math.PI / 2.1} />
           <ambientLight />
         </Canvas>
